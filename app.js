@@ -74,7 +74,30 @@ app.get('/unis',(req , response) => {
     });
     
     
-  
+  app.get('/unis/:state',(req , res) => {
+
+        let finalSet = [];
+        //state requested from url
+        let stateRequested = _.lowerCase(req.params.state);
+
+        //check state_province field's existence if so then fetch Uni's
+        Course.find({} , (err , docs) => {
+          if(err){
+            res.send(err);
+          }
+    else{
+        docs.forEach(doc => {
+       if(doc.state_province != null &&_.lowerCase(doc.state_province).includes(stateRequested)){
+        finalSet.push(doc);
+       }
+       else if(_.lowerCase(doc.name).includes(stateRequested))
+       finalSet.push(doc);
+      });
+      //return list of unis acc. to state
+      res.send(finalSet); 
+    }
+  })
+});
 
 
 
